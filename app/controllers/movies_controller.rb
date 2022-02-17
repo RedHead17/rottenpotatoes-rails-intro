@@ -13,13 +13,17 @@ class MoviesController < ApplicationController
                       "More Info" => {"sort" => "title", "col_id" => "more_info_header"}}
     
     # Perform filtering if needed.
+    # TODO: use redirection instead of session param explicitly
     @all_ratings = Movie.MOVIE_RATINGS
     @sel_ratings = params[:ratings]
+    @sel_ratings = session[:ratings] unless !@sel_ratings.nil?
+    
     if(@sel_ratings.nil?)
       @movies = Movie.all
     else
       @movies = Movie.with_ratings(@sel_ratings)
     end
+    session[:ratings] = @sel_ratings
     
     # Perform sorting and apply class to column header if needed
     @selected_class = "hilite bg-warning"
