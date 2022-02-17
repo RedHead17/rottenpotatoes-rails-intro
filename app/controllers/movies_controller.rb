@@ -7,13 +7,18 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sorting_hash = { "title" => {"sort" => "title"}, "rating" => {"sort" => "rating"}, 
-      "release_date" => {"sort" => "release_date"}}
+    @sorting_hash = { "Movie Title" => {"sort" => "title", "col_id" => "title_header"}, 
+                      "Rating" => {"sort" => "rating", "col_id" => "rating_header"}, 
+                      "Release Date" => {"sort" => "release_date", "col_id" => "release_date_header"}, 
+                      "More Info" => {"sort" => "title", "col_id" => "more_info_header"}}
     
     sort_by = params[:sort]
+    @selected_class = "hilite bg-warning"
     @movies = Movie.all
+    @sel_col = "none"
     if(!sort_by.nil?)
       @movies = @movies.order(sort_by)
+      @sel_col = params[:col_id]
     end
   end
 

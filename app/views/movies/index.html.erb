@@ -6,18 +6,11 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>
-        <%= link_to "Movie Title", movies_path(@sorting_hash["title"]), :id => 'title_header' %>
+      <% @sorting_hash.each do |label, value| %>
+      <th class="<%= @selected_class if @sel_col == value['col_id'] %>">
+        <%= link_to label, movies_path(value), :id => value['col_id'] %>
       </th>
-      <th>
-        <%= link_to "Rating", movies_path(@sorting_hash["rating"]), :id => 'rating_header' %>
-      </th>
-      <th>
-        <%= link_to "Release Date", movies_path(@sorting_hash["release_date"]), :id => 'release_date_header' %>
-      </th>
-      <th>
-        <%= link_to "More Info", movies_path(@sorting_hash["title"]), :id => 'more_info_header' %>
-      </th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
