@@ -16,9 +16,10 @@ class MoviesController < ApplicationController
 
   def index
     # Perform filtering if needed.
-    # TODO: use redirection instead of session param explicitly
     @sorting_hash = @@SORTING_HASH
     @all_ratings = Movie.MOVIE_RATINGS
+    
+    # Check user specified sorting ratings
     @sel_ratings = params[:ratings]
     replace_ratings = false;
     if(@sel_ratings.nil?)
