@@ -12,12 +12,13 @@ class MoviesController < ApplicationController
                       "Release Date" => {"sort" => "release_date", "col_id" => "release_date_header"}, 
                       "More Info" => {"sort" => "title", "col_id" => "more_info_header"}}
     
-    sort_by = params[:sort]
+    @all_ratings = Movie.MOVIE_RATINGS
     @selected_class = "hilite bg-warning"
     @movies = Movie.all
     @sel_col = "none"
+    sort_by = params[:sort]
     if(!sort_by.nil?)
-      @movies = @movies.order(sort_by)
+      @movies.order!(sort_by)
       @sel_col = params[:col_id]
     end
   end

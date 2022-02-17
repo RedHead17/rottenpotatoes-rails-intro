@@ -3,6 +3,17 @@
 
 <%#  Part 1: Start here... %>
 
+<!-- Ratings filter. Adapted from the instructions to fit the erb code.  -->
+<%= form_tag movies_path, :method => :get do %>
+  <% @all_ratings.each do |label, value| %>
+    <%= check_box_tag "ratings[]", label %>
+    <%= value %>
+    <br />
+  <% end %>
+  <%= submit_tag 'Refresh', :class => 'btn btn-primary' %>
+<% end %>
+
+<br />
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
