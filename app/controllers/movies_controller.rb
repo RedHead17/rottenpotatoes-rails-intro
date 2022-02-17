@@ -1,5 +1,13 @@
 class MoviesController < ApplicationController
 
+  @@SORTING_HASH = { "Movie Title" => {"sort" => "title", "col_id" => "title_header"}, 
+                      "Rating" => {"sort" => "rating", "col_id" => "rating_header"}, 
+                      "Release Date" => {"sort" => "release_date", "col_id" => "release_date_header"}, 
+                      "More Info" => {"sort" => "title", "col_id" => "more_info_header"}}
+  def self.SORTING_HASH
+    return @@SORTING_HASH
+  end
+
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -7,23 +15,22 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sorting_hash = { "Movie Title" => {"sort" => "title", "col_id" => "title_header"}, 
-                      "Rating" => {"sort" => "rating", "col_id" => "rating_header"}, 
-                      "Release Date" => {"sort" => "release_date", "col_id" => "release_date_header"}, 
-                      "More Info" => {"sort" => "title", "col_id" => "more_info_header"}}
-    
     # Perform filtering if needed.
     # TODO: use redirection instead of session param explicitly
+    @sorting_hash = @@SORTING_HASH
     @all_ratings = Movie.MOVIE_RATINGS
     @sel_ratings = params[:ratings]
-    @sel_ratings = session[:ratings] unless !@sel_ratings.nil?
-    
+    replace_ratings = false;
     if(@sel_ratings.nil?)
       @movies = Movie.all
+      replace_ratings = !session[:ratings].nil?
+      if(replace_ratings)
+        params[:ratings] = session[:ratings]
+      end
     else
       @movies = Movie.with_ratings(@sel_ratings)
+      session[:ratings] = @sel_ratings
     end
-    session[:ratings] = @sel_ratings
     
     # Perform sorting and apply class to column header if needed
     @selected_class = "hilite bg-warning"
@@ -31,9 +38,9 @@ class MoviesController < ApplicationController
     sort_by = params[:sort]
     
     # Take from the session hash if sort by is nil
-    if(sort_by.nil?)
-      puts "Checking session sort data"
-      sort_by = session[:sort]
+    replace_sorting = sort_by.nil? && !session[:sort].nil?;
+    if(replace_sorting)
+      params[:sort] = session[:sort]
       params[:col_id] = session[:col_id]
     end
     
@@ -42,6 +49,11 @@ class MoviesController < ApplicationController
       @sel_col = params[:col_id]
       session[:sort] = sort_by
       session[:col_id] = @sel_col
+    end
+    
+    if(replace_ratings || replace_sorting)
+      flash.keep
+      redirect_to movies_path(params)
     end
   end
 
