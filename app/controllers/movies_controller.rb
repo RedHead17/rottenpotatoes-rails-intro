@@ -12,9 +12,17 @@ class MoviesController < ApplicationController
                       "Release Date" => {"sort" => "release_date", "col_id" => "release_date_header"}, 
                       "More Info" => {"sort" => "title", "col_id" => "more_info_header"}}
     
+    # Perform filtering if needed.
     @all_ratings = Movie.MOVIE_RATINGS
+    @sel_ratings = params[:ratings]
+    if(@sel_ratings.nil?)
+      @movies = Movie.all
+    else
+      @movies = Movie.with_ratings(@sel_ratings)
+    end
+    
+    # Perform sorting and apply class to column header if needed
     @selected_class = "hilite bg-warning"
-    @movies = Movie.all
     @sel_col = "none"
     sort_by = params[:sort]
     if(!sort_by.nil?)

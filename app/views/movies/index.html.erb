@@ -4,13 +4,15 @@
 <%#  Part 1: Start here... %>
 
 <!-- Ratings filter. Adapted from the instructions to fit the erb code.  -->
-<%= form_tag movies_path, :method => :get do %>
+<%= form_tag movies_path, :id => 'ratings_form', :method => :get do %>
   <% @all_ratings.each do |label, value| %>
-    <%= check_box_tag "ratings[]", label %>
+    <%= check_box_tag "ratings[]", value,
+        (checked = true if !@sel_ratings.nil? && @sel_ratings.include?(value)),
+        :id => "rating_#{value}" %>
     <%= value %>
     <br />
   <% end %>
-  <%= submit_tag 'Refresh', :class => 'btn btn-primary' %>
+  <%= submit_tag 'Refresh', :class => 'btn btn-primary', :id => 'ratings_submit' %>
 <% end %>
 
 <br />
