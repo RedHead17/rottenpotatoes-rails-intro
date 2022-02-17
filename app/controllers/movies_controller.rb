@@ -25,9 +25,19 @@ class MoviesController < ApplicationController
     @selected_class = "hilite bg-warning"
     @sel_col = "none"
     sort_by = params[:sort]
+    
+    # Take from the session hash if sort by is nil
+    if(sort_by.nil?)
+      puts "Checking session sort data"
+      sort_by = session[:sort]
+      params[:col_id] = session[:col_id]
+    end
+    
     if(!sort_by.nil?)
       @movies.order!(sort_by)
       @sel_col = params[:col_id]
+      session[:sort] = sort_by
+      session[:col_id] = @sel_col
     end
   end
 
