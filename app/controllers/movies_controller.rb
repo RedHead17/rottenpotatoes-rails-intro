@@ -7,7 +7,14 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @sorting_hash = { "title" => {"sort" => "title"}, "rating" => {"sort" => "rating"}, 
+      "release_date" => {"sort" => "release_date"}}
+    
+    sort_by = params[:sort]
     @movies = Movie.all
+    if(!sort_by.nil?)
+      @movies = @movies.order(sort_by)
+    end
   end
 
   def new
